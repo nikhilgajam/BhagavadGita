@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bhagavad Gita</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./Data/Pictures/favicon.png">
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.22);
+      --accent-soft-2: rgba(56, 189, 248, 0.32);
+      --text-primary: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.22);
+      --verse-font-size: 20px;
+      --left-pane-width: 45%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body.resizing {
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* LEFT PANEL */
+
+    .left-panel {
+      flex: 0 0 var(--left-pane-width);
+      max-width: 80%;
+      min-width: 20%;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid var(--border-subtle);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), transparent 55%),
+        radial-gradient(circle at bottom, rgba(56, 189, 248, 0.08), transparent 60%),
+        #020617;
+    }
+
+    .image-frame {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem;
+    }
+
+    .image-frame img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 1.6rem;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
+      animation: floatSlow 18s ease-in-out infinite alternate;
+      transform-origin: center;
+      background: radial-gradient(circle at center, #020617, #000);
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.18), transparent 60%);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .image-overlay-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      backdrop-filter: blur(16px);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.9);
+    }
+
+    .image-overlay-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .image-meta {
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        120deg,
+        rgba(15, 23, 42, 0.92),
+        rgba(2, 6, 23, 0.96)
+      );
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .image-meta span {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .image-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-shadow: 0 0 16px rgba(0, 0, 0, 0.8);
+    }
+
+    /* DIVIDER (RESIZER) */
+
+    .divider {
+      flex: 0 0 6px;
+      cursor: col-resize;
+      background: linear-gradient(
+        180deg,
+        rgba(34, 197, 94, 0.35),
+        rgba(56, 189, 248, 0.45)
+      );
+      border-inline: 1px solid rgba(15, 23, 42, 1);
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.9),
+        0 0 18px rgba(15, 23, 42, 0.9);
+      position: relative;
+    }
+
+    .divider::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 60px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: 0 0 10px rgba(15, 23, 42, 0.9);
+    }
+
+    /* RIGHT PANEL LAYOUT */
+
+    .right-panel {
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 1.3rem 1.8rem 1.5rem;
+      gap: 0.9rem;
+      background:
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 65%),
+        #020617;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at left, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.98));
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      animation: slideDownIn 0.55s ease-out;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .title-block p {
+      margin: 0.18rem 0 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .session-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .session-indicator .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+      animation: pulseDot 1.6s ease-out infinite;
+    }
+
+    /* CONTROLS */
+
+    .controls {
+      padding: 0.9rem 1rem 0.9rem;
+      border-radius: 1.2rem;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.96),
+        rgba(2, 6, 23, 0.98)
+      );
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      animation: fadeIn 0.6s ease-out 0.1s backwards;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .field.grow {
+      flex: 2;
+    }
+
+    .field.button-group {
+      flex: 1.6;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: flex-end;
+      gap: 0.4rem;
+    }
+
+    .field label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    select {
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-subtle);
+      padding: 0.45rem 0.65rem;
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      outline: none;
+      width: 100%;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease,
+        transform 0.08s ease;
+    }
+
+    select:focus {
+      border-color: rgba(34, 197, 94, 0.8);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.7), 0 0 18px rgba(34, 197, 94, 0.4);
+      background: rgba(15, 23, 42, 0.98);
+      transform: translateY(-0.5px);
+    }
+
+    .verse-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .icon-btn {
+      border-radius: 0.8rem;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-primary);
+      width: 1.9rem;
+      height: 1.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(15, 23, 42, 1);
+      transform: translateY(-0.5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .icon-btn:active {
+      transform: translateY(0.5px) scale(0.96);
+      box-shadow: none;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .slider-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .slider-label.large {
+      font-size: 1rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      appearance: none;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(34, 197, 94, 0.6),
+        rgba(56, 189, 248, 0.65)
+      );
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.45);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(34, 197, 94, 0.6),
+        rgba(56, 189, 248, 0.65)
+      );
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35);
+      cursor: pointer;
+    }
+
+    .pill-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 0.42rem 0.75rem;
+      font-size: 0.75rem;
+      background: linear-gradient(
+        120deg,
+        rgba(34, 197, 94, 0.18),
+        rgba(56, 189, 248, 0.12)
+      );
+      color: var(--text-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+      backdrop-filter: blur(14px);
+      transition: transform 0.09s ease, box-shadow 0.18s ease, background 0.16s ease,
+        border 0.16s ease;
+    }
+
+    .pill-btn.secondary {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(148, 163, 184, 0.55);
+      color: var(--text-muted);
+    }
+
+    .pill-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+      background: linear-gradient(
+        120deg,
+        rgba(34, 197, 94, 0.28),
+        rgba(56, 189, 248, 0.22)
+      );
+    }
+
+    .pill-btn:active {
+      transform: translateY(0.5px) scale(0.97);
+      box-shadow: none;
+    }
+
+    /* CONTENT AREA */
+
+    .content-area {
+      border-radius: 1.3rem;
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617);
+      border: 1px solid var(--border-subtle);
+      padding: 0.9rem 1.1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
+      animation: fadeIn 0.6s ease-out 0.2s backwards;
+      flex: 0 0 auto; /* grows with content */
+    }
+
+    .verse-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 1);
+    }
+
+    #verseTitle {
+      margin: 0.25rem 0 0;
+      font-size: 1.05rem;
+      color: #e5e7eb;
+    }
+
+    .verse-header .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      align-items: flex-end;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .verse-header .meta span {
+      padding: 0.14rem 0.45rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    .verse-body {
+      margin: 0.2rem 0 0.25rem;
+      padding-right: 0.2rem;
+      font-size: var(--verse-font-size);
+      line-height: 1.7;
+      color: #e5e7eb;
+      white-space: pre-wrap; /* preserve newlines/spaces */
+    }
+
+    /* === Custom Heading Styles for Verse Body === */
+    
+    .verse-body h2 {
+      font-size: 1.35em;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 1.1em 0 0.6em 0;
+      line-height: 1.3;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.15);
+      padding-bottom: 0.3em;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .verse-body h3 {
+      font-size: 1.15em;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin: 0.9em 0 0.4em 0;
+      opacity: 0.95;
+    }
+
+    /* =========================================== */
+
+    .status-message {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      min-height: 1.2em;
+      padding-top: 0.25rem;
+      border-top: 1px dashed rgba(51, 65, 85, 0.85);
+    }
+
+    .status-message strong {
+      color: #f97316;
+    }
+
+    .verse-body.fade-in {
+      animation: fadeInUp 0.35s ease-out;
+    }
+
+    /* ANIMATIONS */
+
+    @keyframes floatSlow {
+      0% {
+        transform: scale(1) translateY(0) rotate(-0.2deg);
+      }
+      100% {
+        transform: scale(1.03) translateY(-8px) rotate(0.4deg);
+      }
+    }
+
+    @keyframes pulseDot {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      70% {
+        transform: scale(1.22);
+        opacity: 0.2;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideDownIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 960px) {
+      .app-shell {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        position: relative;
+        top: auto;
+        height: 45vh;
+        width: 100%;
+        flex: 0 0 auto;
+        max-width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .right-panel {
+        padding: 1rem 0.85rem 1.1rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .controls {
+        padding-inline: 0.75rem;
+      }
+
+      .control-row {
+        flex-direction: column;
+      }
+
+      .field.button-group {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .content-area {
+        padding-inline: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="left-panel">
+      <div class="image-frame">
+        <img id="chapterImage" src="" alt="Bhagavad Gita chapter illustration" />
+      </div>
+      <div class="image-overlay">
+        <div class="image-overlay-top">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            </div>
+          </div>
+        <div class="image-overlay-bottom">
+          <div class="image-meta">
+            Chapter <span id="imageChapterLabel">1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" id="dragHandle"></div>
+
+    <div class="right-panel">
+      <header class="top-bar">
+        <div class="title-block">
+          <h1>Bhagavad Gita</h1>
+          <p>The Ultimate Manual for Life.</p>
+        </div>
+        <div class="session-indicator">
+          <span class="dot"></span>
+          <span>Session active</span>
+        </div>
+      </header>
+
+      <section class="controls">
+        <div class="control-row">
+          <div class="field">
+            <label for="languageSelect">Language</label>
+            <select id="languageSelect">
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Telugu">Telugu</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="chapterSelect">Chapter</label>
+            <select id="chapterSelect"></select>
+          </div>
+          <div class="field">
+            <label for="verseSelect">Verse</label>
+            <div class="verse-input-wrap">
+              <button class="icon-btn" id="prevVerseBtn" type="button" aria-label="Previous verse">&lsaquo;</button>
+              <select id="verseSelect"></select>
+              <button class="icon-btn" id="nextVerseBtn" type="button" aria-label="Next verse">&rsaquo;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <div class="field grow">
+            <label for="fontSizeSlider">Font size</label>
+            <div class="slider-row">
+              <span class="slider-label small">A</span>
+              <input type="range" id="fontSizeSlider" min="14" max="32" step="1" />
+              <span class="slider-label large">A</span>
+            </div>
+          </div>
+          <div class="field button-group">
+            <button id="prevChapterBtn" class="pill-btn" type="button">Prev chapter</button>
+            <button id="nextChapterBtn" class="pill-btn" type="button">Next chapter</button>
+            <button id="reloadBtn" class="pill-btn secondary" type="button">Reload</button>
+          </div>
+        </div>
+      </section>
+
+      <main class="content-area">
+        <div class="verse-header">
+          <div>
+            <div class="pill" id="languageChip">English</div>
+            <h2 id="verseTitle">Chapter 1 · Verse 1</h2>
+          </div>
+          <div class="meta">
+            <span id="metaChapter">Chapter 1</span>
+            <span id="metaVerse">Verse 1</span>
+          </div>
+        </div>
+
+        <article id="verseText" class="verse-body">
+          </article>
+
+        <div id="statusMessage" class="status-message"></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const storageKey = "gitaReaderState_v4";
+
+      const minChapter = 0;
+      const maxChapter = 18;
+      
+      // Verse counts per chapter (standard 700-verse Gita)
+      const maxVersesByChapter = {
+        0: 0,
+        1: 47,
+        2: 72,
+        3: 43,
+        4: 42,
+        5: 29,
+        6: 47,
+        7: 30,
+        8: 28,
+        9: 34,
+        10: 42,
+        11: 55,
+        12: 20,
+        13: 34,
+        14: 27,
+        15: 20,
+        16: 24,
+        17: 28,
+        18: 78
+      };
+
+      function getMaxVerseForChapter(ch) {
+        return maxVersesByChapter[ch] || 0;
+      }
+
+      function getMinVerseForChapter(ch) {
+        // All chapters start from Verse 0.
+        return 0;
+      }
+
+      const defaultState = {
+        language: "English",
+        chapter: 0, // Default to chapter 0
+        verse: 0,
+        fontSize: 20,
+        leftWidth: 45 // %
+      };
+
+      let state = { ...defaultState };
+      let storageAvailable = true;
+
+      // DOM elements
+      const languageSelect = document.getElementById("languageSelect");
+      const chapterSelect = document.getElementById("chapterSelect");
+      const verseSelect = document.getElementById("verseSelect");
+      const fontSizeSlider = document.getElementById("fontSizeSlider");
+
+      const prevVerseBtn = document.getElementById("prevVerseBtn");
+      const nextVerseBtn = document.getElementById("nextVerseBtn");
+      const prevChapterBtn = document.getElementById("prevChapterBtn");
+      const nextChapterBtn = document.getElementById("nextChapterBtn");
+      const reloadBtn = document.getElementById("reloadBtn");
+
+      const verseTextEl = document.getElementById("verseText");
+      const statusMessageEl = document.getElementById("statusMessage");
+      const verseTitleEl = document.getElementById("verseTitle");
+      const languageChipEl = document.getElementById("languageChip");
+      const metaChapterEl = document.getElementById("metaChapter");
+      const metaVerseEl = document.getElementById("metaVerse");
+      const imageEl = document.getElementById("chapterImage");
+      const imageChapterLabelEl = document.getElementById("imageChapterLabel");
+
+      const appShell = document.querySelector(".app-shell");
+      const dragHandle = document.getElementById("dragHandle");
+      const root = document.documentElement;
+
+      // Check localStorage availability
+      try {
+        const testKey = "__gita_test__";
+        window.localStorage.setItem(testKey, "1");
+        window.localStorage.removeItem(testKey);
+      } catch (e) {
+        storageAvailable = false;
+        console.warn("localStorage not available, state will not persist.");
+      }
+
+      function loadStateFromStorage() {
+        if (!storageAvailable) return;
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === "object") {
+            state.language = parsed.language || defaultState.language;
+            state.chapter =
+              Number.isInteger(parsed.chapter) &&
+              parsed.chapter >= minChapter &&
+              parsed.chapter <= maxChapter
+                ? parsed.chapter
+                : defaultState.chapter;
+            
+            // Validate verse against the chapter limits
+            let loadedVerse = Number.isInteger(parsed.verse) ? parsed.verse : defaultState.verse;
+            const minV = getMinVerseForChapter(state.chapter);
+            const maxV = getMaxVerseForChapter(state.chapter);
+            
+            if (loadedVerse < minV) loadedVerse = minV;
+            if (loadedVerse > maxV) loadedVerse = maxV;
+            state.verse = loadedVerse;
+
+            state.fontSize =
+              typeof parsed.fontSize === "number"
+                ? Math.min(32, Math.max(14, parsed.fontSize))
+                : defaultState.fontSize;
+            if (typeof parsed.leftWidth === "number") {
+              const lw = Math.min(80, Math.max(20, parsed.leftWidth));
+              state.leftWidth = lw;
+            }
+          }
+        } catch (err) {
+          console.warn("Error parsing saved state", err);
+        }
+      }
+
+      function saveStateToStorage() {
+        if (!storageAvailable) return;
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(state));
+        } catch (err) {
+          console.warn("Could not save state", err);
+        }
+      }
+
+      function applyLeftWidth() {
+        root.style.setProperty("--left-pane-width", `${state.leftWidth}%`);
+      }
+
+      function populateChapterSelect() {
+        chapterSelect.innerHTML = "";
+        for (let i = minChapter; i <= maxChapter; i++) {
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = `Chapter ${i}`;
+          chapterSelect.appendChild(opt);
+        }
+      }
+
+      function populateVerseSelectForChapter(chapter) {
+        const minV = getMinVerseForChapter(chapter);
+        const maxV = getMaxVerseForChapter(chapter);
+        
+        verseSelect.innerHTML = "";
+        // Clamp state.verse into bounds
+        if (state.verse < minV) state.verse = minV;
+        if (state.verse > maxV) state.verse = maxV;
+
+        for (let v = minV; v <= maxV; v++) {
+          const opt = document.createElement("option");
+          opt.value = String(v);
+          opt.textContent = `Verse ${v}`;
+          verseSelect.appendChild(opt);
+        }
+        verseSelect.value = String(state.verse);
+      }
+
+      function updateFontSizeVar() {
+        document.documentElement.style.setProperty(
+          "--verse-font-size",
+          `${state.fontSize}px`
+        );
+      }
+
+      function updateMeta() {
+        verseTitleEl.textContent = `Chapter ${state.chapter} · Verse ${state.verse}`;
+        metaChapterEl.textContent = `Chapter ${state.chapter}`;
+        metaVerseEl.textContent = `Verse ${state.verse}`;
+        languageChipEl.textContent = state.language;
+        imageChapterLabelEl.textContent = String(state.chapter);
+      }
+
+      function applyStateToControls() {
+        languageSelect.value = state.language;
+        chapterSelect.value = String(state.chapter);
+        populateVerseSelectForChapter(state.chapter);
+        fontSizeSlider.value = String(state.fontSize);
+        updateFontSizeVar();
+        applyLeftWidth();
+        updateMeta();
+      }
+
+      function updateImage() {
+        const chapter = state.chapter;
+        const src = `Data/Pictures/Chapter ${chapter}.jpg`;
+        imageEl.classList.remove("fade-in");
+        imageEl.src = src;
+      }
+
+      imageEl.addEventListener("load", () => {
+        imageEl.classList.add("fade-in");
+      });
+
+      imageEl.addEventListener("error", () => {
+        statusMessageEl.innerHTML =
+          'Image not found for this chapter. Expected at <strong>Data/Pictures/Chapter ' +
+          state.chapter +
+          ".jpg</strong>";
+      });
+
+      async function loadVerseText() {
+        const lang = state.language;
+        const chapter = state.chapter;
+        const verse = state.verse;
+
+        const path = `Data/Bhagavad_Gita/${lang}/Chapter_${chapter}/Verse_${verse}.txt`;
+
+        statusMessageEl.innerHTML = "Loading verse…";
+        verseTextEl.textContent = "";
+        verseTextEl.classList.remove("fade-in");
+
+        try {
+          const res = await fetch(path);
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+          }
+          let text = await res.text();
+
+          // 1. Basic HTML Escape (prevent injection of existing tags)
+          let formatted = text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+          // 2. Parse "=== Big Heading ===" into <h2>
+          formatted = formatted.replace(
+            /^===\s+(.*?)\s+===$/gm,
+            "<h2>$1</h2>"
+          );
+
+          // 3. Parse "== Sub Heading ==" into <h3>
+          formatted = formatted.replace(
+            /^==\s+(.*?)\s+==$/gm,
+            "<h3>$1</h3>"
+          );
+
+          // 4. Set InnerHTML
+          verseTextEl.innerHTML = formatted;
+
+          // Trigger small animation
+          void verseTextEl.offsetWidth;
+          verseTextEl.classList.add("fade-in");
+
+          statusMessageEl.textContent = "";
+        } catch (err) {
+          verseTextEl.textContent = "";
+          statusMessageEl.innerHTML =
+            'Could not load this verse. Check that the file exists at <strong>' +
+            path +
+            "</strong>.";
+        }
+      }
+
+      function refreshForNewChapter() {
+        updateImage();
+        updateMeta();
+        loadVerseText();
+      }
+
+      function refreshAll() {
+        applyStateToControls();
+        updateImage();
+        loadVerseText();
+      }
+
+      // Navigation helpers with bounds
+
+      function changeChapter(delta) {
+        let newChapter = state.chapter + delta;
+        
+        if (newChapter < minChapter || newChapter > maxChapter) {
+          statusMessageEl.textContent =
+            delta > 0
+              ? "You are already at the last chapter."
+              : "You are already at the first chapter.";
+          return;
+        }
+
+        state.chapter = newChapter;
+        state.verse = getMinVerseForChapter(state.chapter);
+        
+        saveStateToStorage();
+        applyStateToControls();
+        refreshForNewChapter();
+      }
+
+      function changeVerse(delta) {
+        const currentMax = getMaxVerseForChapter(state.chapter);
+        const currentMin = getMinVerseForChapter(state.chapter);
+        let newVerse = state.verse + delta;
+
+        // Jump to NEXT chapter if at end
+        if (newVerse > currentMax) {
+          if (state.chapter < maxChapter) {
+            state.chapter++;
+            state.verse = getMinVerseForChapter(state.chapter);
+            saveStateToStorage();
+            applyStateToControls();
+            refreshForNewChapter();
+          } else {
+            statusMessageEl.textContent = "End of the Bhagavad Gita.";
+          }
+          return;
+        }
+
+        // Jump to PREVIOUS chapter if at start
+        if (newVerse < currentMin) {
+          if (state.chapter > minChapter) {
+            state.chapter--;
+            state.verse = getMaxVerseForChapter(state.chapter);
+            saveStateToStorage();
+            applyStateToControls();
+            refreshForNewChapter();
+          } else {
+             statusMessageEl.textContent = "Start of the Bhagavad Gita.";
+          }
+          return;
+        }
+
+        state.verse = newVerse;
+        saveStateToStorage();
+        applyStateToControls();
+        loadVerseText();
+      }
+
+      // Event listeners
+
+      languageSelect.addEventListener("change", () => {
+        state.language = languageSelect.value;
+        saveStateToStorage();
+        applyStateToControls();
+        loadVerseText();
+      });
+
+      chapterSelect.addEventListener("change", () => {
+        const value = Number(chapterSelect.value);
+        state.chapter = Number.isNaN(value)
+          ? minChapter
+          : Math.min(maxChapter, Math.max(minChapter, value));
+        
+        state.verse = getMinVerseForChapter(state.chapter);
+        
+        saveStateToStorage();
+        applyStateToControls();
+        refreshForNewChapter();
+      });
+
+      verseSelect.addEventListener("change", () => {
+        const v = Number(verseSelect.value);
+        if (Number.isNaN(v)) return;
+        const maxV = getMaxVerseForChapter(state.chapter);
+        const minV = getMinVerseForChapter(state.chapter);
+        state.verse = Math.min(maxV, Math.max(minV, v));
+        saveStateToStorage();
+        applyStateToControls();
+        loadVerseText();
+      });
+
+      fontSizeSlider.addEventListener("input", () => {
+        const v = Number(fontSizeSlider.value);
+        state.fontSize = v;
+        updateFontSizeVar();
+        saveStateToStorage();
+      });
+
+      prevVerseBtn.addEventListener("click", () => {
+        changeVerse(-1);
+      });
+
+      nextVerseBtn.addEventListener("click", () => {
+        changeVerse(1);
+      });
+
+      prevChapterBtn.addEventListener("click", () => {
+        changeChapter(-1);
+      });
+
+      nextChapterBtn.addEventListener("click", () => {
+        changeChapter(1);
+      });
+
+      reloadBtn.addEventListener("click", () => {
+        loadVerseText();
+        updateImage();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        const tag = e.target.tagName;
+        const isFormElement =
+          tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA";
+
+        if (isFormElement) return;
+
+        switch (e.key) {
+          case "ArrowUp":
+            e.preventDefault();
+            changeChapter(1);
+            break;
+          case "ArrowDown":
+            e.preventDefault();
+            changeChapter(-1);
+            break;
+          case "ArrowLeft":
+            e.preventDefault();
+            changeVerse(-1);
+            break;
+          case "ArrowRight":
+            e.preventDefault();
+            changeVerse(1);
+            break;
+        }
+      });
+
+      let isDragging = false;
+
+      dragHandle.addEventListener("mousedown", () => {
+        isDragging = true;
+        document.body.classList.add("resizing");
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const rect = appShell.getBoundingClientRect();
+        let newWidth = e.clientX - rect.left;
+        const min = rect.width * 0.2;
+        const max = rect.width * 0.8;
+        if (newWidth < min) newWidth = min;
+        if (newWidth > max) newWidth = max;
+        const percent = (newWidth / rect.width) * 100;
+        state.leftWidth = percent;
+        applyLeftWidth();
+      });
+
+      document.addEventListener("mouseup", () => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.classList.remove("resizing");
+        saveStateToStorage();
+      });
+
+      // Init
+      populateChapterSelect();
+      loadStateFromStorage();
+      applyStateToControls();
+      refreshAll();
+    });
+  </script>
+</body>
+</html>
