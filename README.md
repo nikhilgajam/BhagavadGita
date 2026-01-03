@@ -1,7 +1,8 @@
-# Srimad Bhagavad Gita - The Ultimate Manual for Life
+# Srimad Bhagavad Gita
+The Ultimate Manual for Life
 
 <div align="center">
-  <img src="./Data/Pictures/favicon.png" alt="Bhagavad Gita Cosmic Form" width="100%" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+  <img src="./Data/Pictures/BhagavadGita.png" alt="Bhagavad Gita Cosmic Form" width="100%" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   <br><br>
   
   [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)
@@ -33,6 +34,13 @@ Unlike traditional text-heavy sites, this application focuses on a **visual and 
 
 You do not need any package managers (npm/yarn) or servers. This project runs directly in the browser using Vanilla JavaScript.
 
+### Run with Python
+
+To run project locally:
+On Windows: ```py -m http.server 8000```
+On Mac: ```python3 -m http.server 8000```
+On Linux: ```python3 -m http.server 8000```
+
 ### Folder Structure
 
 **Crucial:** For the application to work, you must ensure your data files are organized exactly as shown below, as the JavaScript fetches these paths dynamically:
@@ -54,7 +62,7 @@ You do not need any package managers (npm/yarn) or servers. This project runs di
     └── Bhagavad_Gita/
         ├── English/
         │   ├── Chapter_1/
-        │   │   ├── Verse_1.txt
+        │   │   ├── Verse_0.txt
         │   │   └── ...
         │   └── ...
         ├── Hindi/
