@@ -815,6 +815,9 @@
         18: 78
       };
 
+      let lastRenderedContent = "";
+      let lastNavDir = 1; // 1 = Forward, -1 = Backward
+
       function getMaxVerseForChapter(ch) {
         return maxVersesByChapter[ch] || 0;
       }
@@ -1000,6 +1003,7 @@
         const path = `Data/Bhagavad_Gita/${lang}/Chapter_${chapter}/Verse_${verse}.txt`;
 
         statusMessageEl.innerHTML = "Loading verse…";
+        // We clear the screen to show loading, but we keep 'lastRenderedContent' in memory
         verseTextEl.textContent = "";
         verseTextEl.classList.remove("fade-in");
 
@@ -1009,29 +1013,53 @@
             throw new Error(`HTTP ${res.status}`);
           }
           let text = await res.text();
+          
+          // Clean the text to ensure accurate comparison
+          const cleanText = text.trim();
 
-          // 1. Basic HTML Escape (prevent injection of existing tags)
+          // [FIX] Compare against the variable in memory, not the empty screen
+          if (lastRenderedContent && cleanText === lastRenderedContent) {
+             const maxV = getMaxVerseForChapter(state.chapter);
+             const minV = getMinVerseForChapter(state.chapter);
+             
+             // Check boundaries
+             const isAtEnd = (state.chapter === maxChapter && state.verse === maxV);
+             const isAtStart = (state.chapter === minChapter && state.verse === minV);
+
+             // Logic for Forward Skip (if moving forward and not at the very end)
+             if (lastNavDir === 1 && !isAtEnd) {
+                changeVerse(1);
+                return; 
+             }
+             
+             // Logic for Backward Skip (if moving backward and not at the very start)
+             if (lastNavDir === -1 && !isAtStart) {
+                changeVerse(-1);
+                return; 
+             }
+          }
+
+          // Update the memory with the new unique text
+          lastRenderedContent = cleanText;
+
+          // 1. Basic HTML Escape
           let formatted = text
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
 
-          // 2. Parse "=== Big Heading ===" into <h2>
+          // 2. Parse Headings
           formatted = formatted.replace(
             /^===\s+(.*?)\s+===$/gm,
             "<h2>$1</h2>"
           );
-
-          // 3. Parse "== Sub Heading ==" into <h3>
           formatted = formatted.replace(
             /^==\s+(.*?)\s+==$/gm,
             "<h3>$1</h3>"
           );
 
-          // 4. Set InnerHTML
+          // 3. Render
           verseTextEl.innerHTML = formatted;
-
-          // Trigger small animation
           void verseTextEl.offsetWidth;
           verseTextEl.classList.add("fade-in");
 
@@ -1060,6 +1088,8 @@
       // Navigation helpers with bounds
 
       function changeChapter(delta) {
+        lastNavDir = 1; // Reset to forward for chapter jumps
+
         let newChapter = state.chapter + delta;
         
         if (newChapter < minChapter || newChapter > maxChapter) {
@@ -1079,6 +1109,8 @@
       }
 
       function changeVerse(delta) {
+        lastNavDir = delta; // Capture direction
+
         const currentMax = getMaxVerseForChapter(state.chapter);
         const currentMin = getMinVerseForChapter(state.chapter);
         let newVerse = state.verse + delta;
@@ -1186,14 +1218,15 @@
         if (isFormElement) return;
 
         switch (e.key) {
-          case "ArrowUp":
-            e.preventDefault();
-            changeChapter(1);
-            break;
-          case "ArrowDown":
-            e.preventDefault();
-            changeChapter(-1);
-            break;
+          // Commenting ArrowUp and ArrowDown to enable verse scrolling with arrow buttons
+          // case "ArrowUp":
+          //   e.preventDefault();
+          //   changeChapter(1);
+          //   break;
+          // case "ArrowDown":
+          //   e.preventDefault();
+          //   changeChapter(-1);
+          //   break;
           case "ArrowLeft":
             e.preventDefault();
             changeVerse(-1);
