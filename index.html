@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Bhagavad Gita</title>
@@ -23,7 +24,8 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -53,7 +55,7 @@
 
     .left-panel {
       flex: 0 0 var(--left-pane-width);
-      max-width: 80%;
+      max-width: 45%;
       min-width: 20%;
       position: sticky;
       top: 0;
@@ -136,11 +138,9 @@
 
     .image-meta {
       backdrop-filter: blur(14px);
-      background: linear-gradient(
-        120deg,
-        rgba(15, 23, 42, 0.92),
-        rgba(2, 6, 23, 0.96)
-      );
+      background: linear-gradient(120deg,
+          rgba(15, 23, 42, 0.92),
+          rgba(2, 6, 23, 0.96));
       border-radius: 999px;
       padding: 0.4rem 0.9rem;
       border: 1px solid var(--border-subtle);
@@ -164,11 +164,9 @@
     .divider {
       flex: 0 0 6px;
       cursor: col-resize;
-      background: linear-gradient(
-        180deg,
-        rgba(34, 197, 94, 0.35),
-        rgba(56, 189, 248, 0.45)
-      );
+      background: linear-gradient(180deg,
+          rgba(34, 197, 94, 0.35),
+          rgba(56, 189, 248, 0.45));
       border-inline: 1px solid rgba(15, 23, 42, 1);
       box-shadow:
         0 0 0 1px rgba(15, 23, 42, 0.9),
@@ -258,11 +256,9 @@
     .controls {
       padding: 0.9rem 1rem 0.9rem;
       border-radius: 1.2rem;
-      background: linear-gradient(
-        135deg,
-        rgba(15, 23, 42, 0.96),
-        rgba(2, 6, 23, 0.98)
-      );
+      background: linear-gradient(135deg,
+          rgba(15, 23, 42, 0.96),
+          rgba(2, 6, 23, 0.98));
       border: 1px solid var(--border-subtle);
       box-shadow: 0 20px 55px rgba(0, 0, 0, 0.65);
       display: flex;
@@ -378,11 +374,9 @@
       appearance: none;
       height: 4px;
       border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        rgba(34, 197, 94, 0.6),
-        rgba(56, 189, 248, 0.65)
-      );
+      background: linear-gradient(90deg,
+          rgba(34, 197, 94, 0.6),
+          rgba(56, 189, 248, 0.65));
       outline: none;
     }
 
@@ -407,11 +401,9 @@
     input[type="range"]::-moz-range-track {
       height: 4px;
       border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        rgba(34, 197, 94, 0.6),
-        rgba(56, 189, 248, 0.65)
-      );
+      background: linear-gradient(90deg,
+          rgba(34, 197, 94, 0.6),
+          rgba(56, 189, 248, 0.65));
     }
 
     input[type="range"]::-moz-range-thumb {
@@ -429,11 +421,9 @@
       border: 1px solid rgba(148, 163, 184, 0.6);
       padding: 0.42rem 0.75rem;
       font-size: 0.75rem;
-      background: linear-gradient(
-        120deg,
-        rgba(34, 197, 94, 0.18),
-        rgba(56, 189, 248, 0.12)
-      );
+      background: linear-gradient(120deg,
+          rgba(34, 197, 94, 0.18),
+          rgba(56, 189, 248, 0.12));
       color: var(--text-primary);
       cursor: pointer;
       display: inline-flex;
@@ -455,11 +445,9 @@
     .pill-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
-      background: linear-gradient(
-        120deg,
-        rgba(34, 197, 94, 0.28),
-        rgba(56, 189, 248, 0.22)
-      );
+      background: linear-gradient(120deg,
+          rgba(34, 197, 94, 0.28),
+          rgba(56, 189, 248, 0.22));
     }
 
     .pill-btn:active {
@@ -479,7 +467,8 @@
       gap: 0.6rem;
       box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
       animation: fadeIn 0.6s ease-out 0.2s backwards;
-      flex: 0 0 auto; /* grows with content */
+      flex: 0 0 auto;
+      /* grows with content */
     }
 
     .verse-header {
@@ -540,11 +529,12 @@
       font-size: var(--verse-font-size);
       line-height: 1.7;
       color: #e5e7eb;
-      white-space: pre-wrap; /* preserve newlines/spaces */
+      white-space: pre-wrap;
+      /* preserve newlines/spaces */
     }
 
     /* === Custom Heading Styles for Verse Body === */
-    
+
     .verse-body h2 {
       font-size: 1.35em;
       font-weight: 700;
@@ -556,7 +546,7 @@
       display: inline-block;
       width: 100%;
     }
-    
+
     .verse-body h3 {
       font-size: 1.15em;
       font-weight: 600;
@@ -589,6 +579,7 @@
       0% {
         transform: scale(1) translateY(0) rotate(-0.2deg);
       }
+
       100% {
         transform: scale(1.03) translateY(-8px) rotate(0.4deg);
       }
@@ -599,10 +590,12 @@
         transform: scale(1);
         opacity: 1;
       }
+
       70% {
         transform: scale(1.22);
         opacity: 0.2;
       }
+
       100% {
         transform: scale(1);
         opacity: 1;
@@ -614,6 +607,7 @@
         opacity: 0;
         transform: translateY(-10px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0);
@@ -625,6 +619,7 @@
         opacity: 0;
         transform: translateY(4px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0);
@@ -636,6 +631,7 @@
         opacity: 0;
         transform: translateY(6px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0);
@@ -690,6 +686,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app-shell">
     <div class="left-panel">
@@ -700,8 +697,8 @@
         <div class="image-overlay-top">
           <div class="badge">
             <span class="badge-dot"></span>
-            </div>
           </div>
+        </div>
         <div class="image-overlay-bottom">
           <div class="image-meta">
             Chapter <span id="imageChapterLabel">1</span>
@@ -777,8 +774,7 @@
           </div>
         </div>
 
-        <article id="verseText" class="verse-body">
-          </article>
+        <article id="verseText" class="verse-body" tabindex="-1" style="outline: none;"></article>
 
         <div id="statusMessage" class="status-message"></div>
       </main>
@@ -787,11 +783,11 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const storageKey = "gitaReaderState_v4";
+      const storageKey = "BhagavadGitaState";
 
       const minChapter = 0;
       const maxChapter = 18;
-      
+
       // Verse counts per chapter (standard 700-verse Gita)
       const maxVersesByChapter = {
         0: 0,
@@ -883,16 +879,16 @@
             state.language = parsed.language || defaultState.language;
             state.chapter =
               Number.isInteger(parsed.chapter) &&
-              parsed.chapter >= minChapter &&
-              parsed.chapter <= maxChapter
+                parsed.chapter >= minChapter &&
+                parsed.chapter <= maxChapter
                 ? parsed.chapter
                 : defaultState.chapter;
-            
+
             // Validate verse against the chapter limits
             let loadedVerse = Number.isInteger(parsed.verse) ? parsed.verse : defaultState.verse;
             const minV = getMinVerseForChapter(state.chapter);
             const maxV = getMaxVerseForChapter(state.chapter);
-            
+
             if (loadedVerse < minV) loadedVerse = minV;
             if (loadedVerse > maxV) loadedVerse = maxV;
             state.verse = loadedVerse;
@@ -937,7 +933,7 @@
       function populateVerseSelectForChapter(chapter) {
         const minV = getMinVerseForChapter(chapter);
         const maxV = getMaxVerseForChapter(chapter);
-        
+
         verseSelect.innerHTML = "";
         // Clamp state.verse into bounds
         if (state.verse < minV) state.verse = minV;
@@ -995,7 +991,7 @@
           ".jpg</strong>";
       });
 
-      async function loadVerseText() {
+      async function loadVerseText(forceReload = false) {
         const lang = state.language;
         const chapter = state.chapter;
         const verse = state.verse;
@@ -1013,30 +1009,30 @@
             throw new Error(`HTTP ${res.status}`);
           }
           let text = await res.text();
-          
+
           // Clean the text to ensure accurate comparison
           const cleanText = text.trim();
 
-          // [FIX] Compare against the variable in memory, not the empty screen
-          if (lastRenderedContent && cleanText === lastRenderedContent) {
-             const maxV = getMaxVerseForChapter(state.chapter);
-             const minV = getMinVerseForChapter(state.chapter);
-             
-             // Check boundaries
-             const isAtEnd = (state.chapter === maxChapter && state.verse === maxV);
-             const isAtStart = (state.chapter === minChapter && state.verse === minV);
+          // Compare against the variable in memory, not the empty screen
+          if (!forceReload && lastRenderedContent && cleanText === lastRenderedContent) {
+            const maxV = getMaxVerseForChapter(state.chapter);
+            const minV = getMinVerseForChapter(state.chapter);
 
-             // Logic for Forward Skip (if moving forward and not at the very end)
-             if (lastNavDir === 1 && !isAtEnd) {
-                changeVerse(1);
-                return; 
-             }
-             
-             // Logic for Backward Skip (if moving backward and not at the very start)
-             if (lastNavDir === -1 && !isAtStart) {
-                changeVerse(-1);
-                return; 
-             }
+            // Check boundaries
+            const isAtEnd = (state.chapter === maxChapter && state.verse === maxV);
+            const isAtStart = (state.chapter === minChapter && state.verse === minV);
+
+            // Logic for Forward Skip (if moving forward and not at the very end)
+            if (lastNavDir === 1 && !isAtEnd) {
+              changeVerse(1);
+              return;
+            }
+
+            // Logic for Backward Skip (if moving backward and not at the very start)
+            if (lastNavDir === -1 && !isAtStart) {
+              changeVerse(-1);
+              return;
+            }
           }
 
           // Update the memory with the new unique text
@@ -1091,7 +1087,7 @@
         lastNavDir = 1; // Reset to forward for chapter jumps
 
         let newChapter = state.chapter + delta;
-        
+
         if (newChapter < minChapter || newChapter > maxChapter) {
           statusMessageEl.textContent =
             delta > 0
@@ -1102,7 +1098,7 @@
 
         state.chapter = newChapter;
         state.verse = getMinVerseForChapter(state.chapter);
-        
+
         saveStateToStorage();
         applyStateToControls();
         refreshForNewChapter();
@@ -1138,7 +1134,7 @@
             applyStateToControls();
             refreshForNewChapter();
           } else {
-             statusMessageEl.textContent = "Start of the Bhagavad Gita.";
+            statusMessageEl.textContent = "Start of the Bhagavad Gita.";
           }
           return;
         }
@@ -1156,6 +1152,7 @@
         saveStateToStorage();
         applyStateToControls();
         loadVerseText();
+        verseTextEl.focus();
       });
 
       chapterSelect.addEventListener("change", () => {
@@ -1163,12 +1160,13 @@
         state.chapter = Number.isNaN(value)
           ? minChapter
           : Math.min(maxChapter, Math.max(minChapter, value));
-        
+
         state.verse = getMinVerseForChapter(state.chapter);
-        
+
         saveStateToStorage();
         applyStateToControls();
         refreshForNewChapter();
+        verseTextEl.focus();
       });
 
       verseSelect.addEventListener("change", () => {
@@ -1180,6 +1178,7 @@
         saveStateToStorage();
         applyStateToControls();
         loadVerseText();
+        verseTextEl.focus();
       });
 
       fontSizeSlider.addEventListener("input", () => {
@@ -1206,7 +1205,7 @@
       });
 
       reloadBtn.addEventListener("click", () => {
-        loadVerseText();
+        loadVerseText(true);
         updateImage();
       });
 
@@ -1273,4 +1272,5 @@
     });
   </script>
 </body>
+
 </html>
