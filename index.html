@@ -750,13 +750,13 @@
             <label for="fontSizeSlider">Font size</label>
             <div class="slider-row">
               <span class="slider-label small">A</span>
-              <input type="range" id="fontSizeSlider" min="14" max="32" step="1" />
+              <input type="range" id="fontSizeSlider" min="16" max="42" step="1" />
               <span class="slider-label large">A</span>
             </div>
           </div>
           <div class="field button-group">
-            <button id="prevVerseMainBtn" class="pill-btn" type="button">Prev Verse</button>
-            <button id="nextVerseMainBtn" class="pill-btn" type="button">Next Verse</button>
+            <button id="prevChapterBtn" class="pill-btn" type="button">Prev Chapter</button>
+            <button id="nextChapterBtn" class="pill-btn" type="button">Next Chapter</button>
             <button id="reloadBtn" class="pill-btn secondary" type="button">Reload</button>
           </div>
         </div>
@@ -842,8 +842,8 @@
 
       const prevVerseBtn = document.getElementById("prevVerseBtn");
       const nextVerseBtn = document.getElementById("nextVerseBtn");
-      const prevVerseMainBtn = document.getElementById("prevVerseMainBtn");
-      const nextVerseMainBtn = document.getElementById("nextVerseMainBtn");
+      const prevChapterBtn = document.getElementById("prevChapterBtn");
+      const nextChapterBtn = document.getElementById("nextChapterBtn");
       const reloadBtn = document.getElementById("reloadBtn");
 
       const verseTextEl = document.getElementById("verseText");
@@ -1196,13 +1196,12 @@
         changeVerse(1);
       });
 
-      // Updated listener logic for main pill buttons
-      prevVerseMainBtn.addEventListener("click", () => {
-        changeVerse(-1);
+      prevChapterBtn.addEventListener("click", () => {
+        changeChapter(-1);
       });
 
-      nextVerseMainBtn.addEventListener("click", () => {
-        changeVerse(1);
+      nextChapterBtn.addEventListener("click", () => {
+        changeChapter(1);
       });
 
       reloadBtn.addEventListener("click", () => {
@@ -1218,6 +1217,15 @@
         if (isFormElement) return;
 
         switch (e.key) {
+          // Commenting ArrowUp and ArrowDown to enable verse scrolling with arrow buttons
+          // case "ArrowUp":
+          //   e.preventDefault();
+          //   changeChapter(1);
+          //   break;
+          // case "ArrowDown":
+          //   e.preventDefault();
+          //   changeChapter(-1);
+          //   break;
           case "ArrowLeft":
             e.preventDefault();
             changeVerse(-1);

@@ -37,9 +37,9 @@ You do not need any package managers (npm/yarn) or servers. This project runs di
 ### Run with Python
 
 To run project locally:
-On Windows: ```py -m http.server 8000```
-On Mac: ```python3 -m http.server 8000```
-On Linux: ```python3 -m http.server 8000```
+* On Windows: ```py -m http.server 8000```
+* On Mac: ```python3 -m http.server 8000```
+* On Linux: ```python3 -m http.server 8000```
 
 ### Folder Structure
 
